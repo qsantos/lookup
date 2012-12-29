@@ -15,22 +15,16 @@
 	exit(1);                      \
 }
 
-static char reverseHash(LTable* lt, u32 n_lt, const char* hashstr, u32 l_string, char* bufstr)
+// some variables used internally by reverseHash()
+static LTable* lt     = NULL;
+static u32     n_lt   = 0;
+static char*   bufstr = NULL;
+
+static char reverseHash(const char hash[16])
 {
-	char hash[16];
-	hex2hash(hashstr, hash, 16);
 	for (u32 i = 0; i < n_lt; i++)
-	{
 		if (LTable_Reverse(&lt[i], hash, bufstr))
-		{
-			printHash(hash, 16);
-			printf(" ");
-			printString(bufstr, l_string);
-			printf("\n");
 			return 1;
-		}
-	}
-	printf("Could not reverse hash\n");
 	return 0;
 }
 
@@ -97,24 +91,37 @@ int main(int argc, char** argv)
 	char* tparam = argv[2];
 
 	// load tables
-	u32 n_lt = argc-3;
-	LTable* lt = malloc(sizeof(LTable) * n_lt);
+	n_lt = argc-3;
+	lt = malloc(sizeof(LTable) * n_lt);
 	assert(lt);
 	for (u32 i = 0; i < n_lt; i++)
 		if (!LTable_FromFile(&lt[i], argv[i+3]))
 			ERROR("Could no load table '%s'\n", argv[i+3])
 
-	// try and crack hash(es)
+	// some parameters
 	u32   l_string  = lt[0].l_string;
 	char* charset   = lt[0].charset;
 	u32   n_charset = lt[0].n_charset;
-	char* bufstr    = malloc(l_string);
-	u32   n_crack   = 0;
+
+	// some buffers
+	char hash[16];
+	bufstr = malloc(l_string);
 	assert(bufstr);
+
+	// try and crack hash(es)
 	switch (ttype)
 	{
 	case T_HASH:
-		reverseHash(lt, n_lt, tparam, l_string, bufstr);
+		hex2hash(tparam, hash, 16);
+		if (reverseHash(hash))
+		{
+			printHash(hash, 16);
+			printf(" ");
+			printString(bufstr, l_string);
+			printf("\n");
+		}
+		else
+			printf("Could not reverse hash\n");
 		break;
 	case T_FILE:
 		(void) 0;
@@ -127,7 +134,17 @@ int main(int argc, char** argv)
 			fread(hashstr, 1, 33, f);
 			if (feof(f))
 				break;
-			n_crack += reverseHash(lt, n_lt, hashstr, l_string, bufstr);
+
+			hex2hash(hashstr, hash, 16);
+			if (reverseHash(hash))
+			{
+				printHash(hash, 16);
+				printf(" ");
+				printString(bufstr, l_string);
+				printf("\n");
+			}
+			else
+				printf("Could not reverse hash\n");
 		}
 
 		fclose(f);
@@ -135,6 +152,7 @@ int main(int argc, char** argv)
 	case T_RAND:
 		srandom(time(NULL));
 		u32 n = atoi(tparam);
+		u32 n_crack = 0;
 		for (u32 i = 0; i < n; i++)
 		{
 			for (u32 j = 0; j < l_string; j++)
@@ -142,12 +160,8 @@ int main(int argc, char** argv)
 
 			char hash[16];
 			MD5((u8*) hash, (u8*) bufstr, l_string);
-			for (u32 i = 0; i < n_lt; i++)
-				if (LTable_Reverse(&lt[i], hash, bufstr))
-				{
-					n_crack++;
-					break;
-				}
+			if (reverseHash(hash))
+				n_crack++;
 			rewriteLine();
 			printf("%lu / %lu", n_crack, i+1);
 			fflush(stdout);
@@ -158,6 +172,7 @@ int main(int argc, char** argv)
 
 	for (u32 i = 0; i < n_lt; i++)
 		LTable_Delete(&lt[i]);
+	free(lt);
 
 	return 0;
 }
