@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "lookup.h"
+
 static void usage(int argc, char** argv)
 {
 	(void) argc;
@@ -37,8 +39,16 @@ int main(int argc, char** argv)
 		exit(0);
 	}
 
-	char* charset = "0123456789abcdefghijklmnopqrstuvwxyz";
-	(void) charset;
+	char* charset  = "0123456789abcdefghijklmnopqrstuvwxyz";
+	u32   l_string = atoi(argv[1]);
+	char* filename = argv[2];
+	(void) filename;
 
+	LTable lt;
+	LTable_New(&lt, l_string, charset);
+
+	while (LTable_Next(&lt));
+
+	LTable_Delete(&lt);
 	return 0;
 }
