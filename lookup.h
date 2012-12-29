@@ -12,6 +12,7 @@ typedef struct __attribute__((packed))
 {
 	u32 version; // LTF0 // 0x3046524C
 	u32 l_string;
+	u32 curidx;
 	u32 n_charset;
 } LTF_header;
 

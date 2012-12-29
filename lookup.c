@@ -102,8 +102,9 @@ void LTable_ToFile(LTable* lt, const char* filename)
 
 	LTF_header h =
 	{
-		0x3046525C,
+		0x3046524C,
 		lt->l_string,
+		lt->curidx,
 		lt->n_charset,
 	};
 	fwrite(&h,          sizeof(LTF_header), 1,             f);
@@ -132,6 +133,7 @@ char LTable_FromFile(LTable* lt, const char* filename)
 	LTable_New(lt, h.l_string, charset);
 	free(charset);
 
+	lt->curidx = h.curidx;
 	fread(lt->curstr, 1,             lt->l_string, f);
 	fread(lt->rows,   lt->sizeofRow, lt->n_rows,   f);
 
