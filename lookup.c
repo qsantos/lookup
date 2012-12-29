@@ -156,7 +156,7 @@ void LTable_Print(LTable* lt)
 static s32 binaryFind(LTable* lt, const char* hash)
 {
         u32 start = 0;
-        u32 end   = lt->n_rows;
+        u32 end   = lt->n_rows-1;
         while (start != end)
         {
                 u32 middle = (start + end) / 2;

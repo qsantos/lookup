@@ -51,12 +51,12 @@ int main(int argc, char** argv)
 		exit(1);
 	}
 
-	LTable_Print(&lt);
-
+	char hash[16];
+	hex2hash(tparam, hash, 16);
 	char* bufstr = malloc(lt.l_string);
-	if (LTable_Reverse(&lt, tparam, bufstr))
+	if (LTable_Reverse(&lt, hash, bufstr))
 	{
-		printHash(tparam, 16);
+		printHash(hash, 16);
 		printf(" ");
 		printString(bufstr, lt.l_string);
 		printf("\n");
