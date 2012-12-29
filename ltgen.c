@@ -47,8 +47,18 @@ int main(int argc, char** argv)
 	LTable lt;
 	LTable_New(&lt, l_string, charset);
 
+	// load table, if exists
+	LTable_FromFile(&lt, filename);
+
+	// generate more rows
 	while (LTable_Next(&lt));
 
+	// finish generation
+	// TODO
+	LTable_Sort(&lt);
+
+	// save table
+	LTable_ToFile(&lt, filename);
 	LTable_Delete(&lt);
 	return 0;
 }
