@@ -43,6 +43,7 @@ void LTable_ToFile  (LTable* lt, const char* filename);
 char LTable_FromFile(LTable* lt, const char* filename);
 
 // misc
+void LTable_Print  (LTable* lt);
 char LTable_Reverse(LTable* lt, const char* hash, char* dst);
 
 // useful functions

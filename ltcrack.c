@@ -48,9 +48,10 @@ int main(int argc, char** argv)
 	if (!LTable_FromFile(&lt, filename))
 	{
 		fprintf(stderr, "Could not load table '%s'\n", filename);
-		LTable_Delete(&lt);
 		exit(1);
 	}
+
+	LTable_Print(&lt);
 
 	char* bufstr = malloc(lt.l_string);
 	if (LTable_Reverse(&lt, tparam, bufstr))

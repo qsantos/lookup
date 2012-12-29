@@ -43,6 +43,7 @@ void LTable_Delete(LTable* lt)
 char LTable_Next(LTable* lt)
 {
 	// compute and store the hash of the current string
+	memcpy(CSTR(lt->curidx), lt->curstr, lt->l_string);
 	MD5((u8*) CHASH(lt->curidx), (u8*) lt->curstr, lt->l_string);
 
 	// compute next string
@@ -139,6 +140,17 @@ char LTable_FromFile(LTable* lt, const char* filename)
 
 	fclose(f);
 	return 1;
+}
+
+void LTable_Print(LTable* lt)
+{
+	for (u32 i = 0; i < lt->n_rows; i++)
+	{
+		printHash(CHASH(i), lt->l_hash);
+		printf(" ");
+		printString(CSTR(i), lt->l_string);
+		printf("\n");
+	}
 }
 
 static s32 binaryFind(LTable* lt, const char* hash)
