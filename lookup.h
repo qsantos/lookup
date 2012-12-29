@@ -45,6 +45,9 @@ char LTable_FromFile(LTable* lt, const char* filename);
 char LTable_Reverse(LTable* lt, const char* hash, char* dst);
 
 // useful functions
-char bstrncmp(const char* a, const char* b, u32 n);
+char bstrncmp   (const char* a, const char* b, u32 n);
+void hex2hash   (const char* hex, char* hash, u32 l_hash);
+void printHash  (const char* hash, u32 l_hash);
+void printString(const char* str, u32 l_string);
 
 #endif

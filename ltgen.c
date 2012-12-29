@@ -42,7 +42,6 @@ int main(int argc, char** argv)
 	char* charset  = "0123456789abcdefghijklmnopqrstuvwxyz";
 	u32   l_string = atoi(argv[1]);
 	char* filename = argv[2];
-	(void) filename;
 
 	LTable lt;
 	LTable_New(&lt, l_string, charset);

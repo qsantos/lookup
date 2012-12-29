@@ -1,6 +1,6 @@
 CFLAGS  = -Wall -Wextra -Werror -pedantic -std=c99 -O3 -D_XOPEN_SOURCE=600 -g
 LDFLAGS = -O3 -lm
-TARGET  = ltgen
+TARGET  = ltgen ltcrack
 OBJ     = $(SRC:.c=.o)
 
 all: $(TARGET)

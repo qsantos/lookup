@@ -173,3 +173,28 @@ char bstrncmp(const char* a, const char* b, u32 n)
 			return *(u8*)a < *(u8*)b ? -1 : 1;
 	return 0;
 }
+
+void hex2hash(const char* hex, char* hash, u32 l_hash)
+{
+	for (u32 i = 0; i < l_hash; i++)
+	{
+		*hash  = *hex - (*hex <= '9' ? '0' : 87);
+		hex++;
+		*hash *= 16;
+		*hash += *hex - (*hex <= '9' ? '0' : 87);
+		hex++;
+		hash++;
+	}
+}
+
+void printHash(const char* hash, u32 l_hash)
+{
+	for (u32 i = 0; i < l_hash; i++, hash++)
+		printf("%.2x", (u8) *hash);
+}
+
+void printString(const char* str, u32 l_string)
+{
+	for (u32 j = 0; j < l_string; j++, str++)
+		printf("%c", *str);
+}
